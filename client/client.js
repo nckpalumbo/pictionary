@@ -74,7 +74,7 @@ var clearCanvas = function clearCanvas() {
 //Draw
 var draw = function draw() {
   var keys = Object.keys(draws);
-
+  
   for (var i = 0; i < keys.length; i++) {
     var drawCall = draws[keys[i]];
 
@@ -91,9 +91,9 @@ var draw = function draw() {
 
 var handleResponse = function handleResponse(data) {
   if (!draws[data.user]) {
-    draws[data.user] = data.coords;
-  } else if (data.coords.lastUpdate > draws[data.user].lastUpdate) {
-    draws[data.user] = data.coords;
+    draws[data.user] = data.coordinates;
+  } else if (data.coordinates.lastUpdate > draws[data.user].lastUpdate) {
+    draws[data.user] = data.coordinates;
   }
   draw();
 };
@@ -120,7 +120,8 @@ var connectSocket = function connectSocket(e) {
     clientCoordinates.lastUpdate = time;
 
     draws[user] = clientCoordinates;
-    socket.emit('join', { user: user, coords: clientCoordinates });
+    socket.emit('join', { user: user, coordinates: clientCoordinates });
+    document.querySelector("#usernameInput").style.display = "none";
   };
 
   var update = function update() {
@@ -131,18 +132,18 @@ var connectSocket = function connectSocket(e) {
     clientCoordinates.lineWidth = lineWidth;
     clientCoordinates.strokeStyle = strokeStyle;
 
-    socket.emit('updateServer', { user: user, coords: clientCoordinates });
+    socket.emit('updateServer', { user: user, coordinates: clientCoordinates });
   };
 
   var sendClear = function sendClear(e) {
-    socket.emit('clear', { user: user, coords: clientCoordinates });
+    socket.emit('clear', { user: user, coordinates: clientCoordinates });
   };
 
   var sendMessage = function sendMessage(e) {
     var messageSend = document.querySelector('#message').value;
 
     if (messageSend){
-        socket.emit('msgToServer', { user: user, msg: messageSend, coords: clientCoordinates });
+        socket.emit('msgToServer', { user: user, msg: messageSend, coordinates: clientCoordinates });
     }
     
     document.querySelector('#message').value = '';
@@ -155,7 +156,6 @@ var connectSocket = function connectSocket(e) {
 
   socket.on('connect', function () {
     setup();
-
     setInterval(update, 1);
 
     message.addEventListener('keyup', function (e) {

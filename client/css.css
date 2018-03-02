@@ -8,7 +8,7 @@ h1 {
   font-family: 'Georgia';
 }
 
-#chatSection, #scoreSection {
+#chatSection, #scoreSection, #winSection {
   width: 45%;
   float: left;
 }
@@ -38,6 +38,9 @@ h1 {
 }
 #scoreSection{
     text-align: left;
+}
+#winSection{
+    text-align: right;
 }
 
 p {
